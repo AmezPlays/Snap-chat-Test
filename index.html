@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SnapApp</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background: white;
+            width: 400px;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        input, button {
+            width: 100%;
+            padding: 10px;
+            font-size: 14px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-top: 5px;
+        }
+
+        button {
+            background-color: #FFFC00;
+            color: white;
+            border: none;
+        }
+
+        .snap-button {
+            background-color: #FFFC00;
+            color: white;
+            padding: 15px;
+            font-size: 18px;
+            border: none;
+            width: 100%;
+            cursor: pointer;
+        }
+
+        #snap-img {
+            width: 100%;
+            max-height: 300px;
+            display: block;
+            margin-top: 20px;
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .nav-links a {
+            color: #FFFC00;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .confirmation {
+            text-align: center;
+            font-size: 16px;
+            color: green;
+            margin-top: 10px;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>SnapApp</h1>
+    <div id="signup-form">
+        <div class="form-group">
+            <label for="signup-username">Username</label>
+            <input type="text" id="signup-username" placeholder="Enter 
+username">
+        </div>
+        <div class="form-group">
+            <label for="signup-password">Password</label>
+            <input type="password" id="signup-password" placeholder="Enter 
+password">
+        </div>
+        <button onclick="signUp()">Sign Up</button>
+        <div class="nav-links">
+            <a href="javascript:void(0)" onclick="toggleLogin()">Already 
+have an account? Log in</a>
+        </div>
+    </div>
+
+    <div id="login-form" style="display: none;">
+        <div class="form-group">
+            <label for="login-username">Username</label>
+            <input type="text" id="login-username" placeholder="Enter 
+username">
+        </div>
+        <div class="form-group">
+            <label for="login-password">Password</label>
+            <input type="password" id="login-password" placeholder="Enter 
+password">
+        </div>
+        <button onclick="logIn()">Log In</button>
+        <div class="nav-links">
+            <a href="javascript:void(0)" onclick="toggleSignUp()">Don't 
+have an account? Sign up</a>
+        </div>
+    </div>
+
+    <div id="snap-section" style="display: none;">
+        <h2>Take a Snap</h2>
+        <button class="snap-button" onclick="takeSnap()">Take a 
+Snap</button>
+        <img id="snap-img" src="" alt="Snap Image" style="display: none;">
+        <div id="confirmation-message" class="confirmation" 
+style="display: none;">Snap Sent!</div>
+        <button id="send-snap-button" style="display: none;" 
+onclick="sendSnap()">Send Snap</button>
+        <div class="nav-links">
+            <a href="javascript:void(0)" onclick="logOut()">Log Out</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    // User data storage simulation
+    let users = JSON.parse(localStorage.getItem('users')) || [];
+    let currentUser = null;
+
+    // Toggle between SignUp and Login Forms
+    function toggleSignUp() {
+        document.getElementById('signup-form').style.display = 'block';
+        document.getElementById('login-form').style.display = 'none';
+    }
+
+    function toggleLogin() {
+        document.getElementById('login-form').style.display = 'block';
+        document.getElementById('signup-form').style.display = 'none';
+    }
+
+    // Sign Up
+    function signUp() {
+        const username = document.getElementById('signup-username').value;
+        const password = document.getElementById('signup-password').value;
+
+        // Simple validation
+        if (!username || !password) {
+            alert('Please fill out both fields.');
+            return;
+        }
+
+        // Save user in local storage
+        users.push({ username, password });
+        localStorage.setItem('users', JSON.stringify(users));
+        alert('Account created successfully!');
+        toggleLogin();
+    }
+
+    // Log In
+    function logIn() {
+        const username = document.getElementById('login-username').value;
+        const password = document.getElementById('login-password').value;
+
+        const user = users.find(u => u.username === username && u.password 
+=== password);
+        if (user) {
+            currentUser = user;
+            alert('Logged in successfully!');
+            toggleSnapSection();
+        } else {
+            alert('Invalid username or password.');
+        }
+    }
+
+    // Toggle to Snap Section
+    function toggleSnapSection() {
+        document.getElementById('snap-section').style.display = 'block';
+        document.getElementById('login-form').style.display = 'none';
+        document.getElementById('signup-form').style.display = 'none';
+    }
+
+    // Log Out
+    function logOut() {
+        currentUser = null;
+        alert('Logged out successfully!');
+        document.getElementById('snap-section').style.display = 'none';
+        toggleLogin();
+    }
+
+    // Take a Snap (Placeholder for camera functionality)
+    function takeSnap() {
+        // Here you can integrate a real camera or photo upload 
+functionality
+        alert('Snap taken! Placeholder image displayed.');
+        document.getElementById('snap-img').style.display = 'block';
+        document.getElementById('snap-img').src = 
+'https://via.placeholder.com/400x300.png?text=Snap+Image';
+
+        // Show the confirmation and Send button
+        document.getElementById('confirmation-message').style.display = 
+'block';
+        document.getElementById('send-snap-button').style.display = 
+'inline-block';
+    }
+
+    // Send Snap (Placeholder for real sending functionality)
+    function sendSnap() {
+        alert('Snap sent!');
+        // Clear the snap image and hide the send button
+        document.getElementById('snap-img').style.display = 'none';
+        document.getElementById('send-snap-button').style.display = 
+'none';
+        document.getElementById('confirmation-message').style.display = 
+'none';
+    }
+</script>
+
+</body>
+</html>
+
